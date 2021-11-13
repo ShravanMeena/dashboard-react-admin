@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
+// if you want to create a custom input with your style with your values ...this is the componet
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

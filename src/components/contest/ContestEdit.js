@@ -7,14 +7,14 @@ import {
   DateTimeInput,
 } from "react-admin";
 
-const PostTitle = ({ record }) => {
+const ContestTitle = ({ record }) => {
   return <span>Post {record ? `"${record.name}"` : ""}</span>;
 };
 
 export const ContestEdit = (props) => {
   return (
     <Edit
-      title={<PostTitle />}
+      title={<ContestTitle />}
       successMessage={"Successfully edit post"}
       {...props}
     >

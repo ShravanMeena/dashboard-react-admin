@@ -5,7 +5,7 @@ export const AuthProvider = {
   login: ({ username, devicetoken, devicetype, otpCode }) => {
     const request = {
       method: "POST",
-      url: "https://kgdevnode.khelgully.com/noauth-api/v1/login/user",
+      url: "www.api.v1.somethng", //your api endpoint
       data: {
         username,
         devicetoken,

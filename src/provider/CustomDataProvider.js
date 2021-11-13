@@ -1,7 +1,10 @@
 import { fetchUtils } from "react-admin";
 import { stringify } from "query-string";
 
-const apiUrl = "https://kgdevnode.khelgully.com/api/v1/esport";
+// Here is an example implementation, that you can use as a base for your own Data Providers:
+// this is what we use for api calls
+
+const apiUrl = "https://some/api/v1/anothersome"; // your api endpoint
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -11,12 +14,8 @@ const httpClient = (url, options = {}) => {
   // add my own headers here
   options.headers.set("Access-Control-Expose-Headers", "Content-Range");
   options.headers.set("Content-Range", "esport_game_contest 0-24/319");
-  //   options.headers.set("X-User-Type", "admin");
-  //   const { token } = JSON.parse(localStorage.getItem('auth'));
-  options.headers.set(
-    "Authorization",
-    `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInVzZXJkYXRhIjp7ImlkIjoyMCwidXNlcm5hbWUiOiJFWmhlTzF0Y3NoIiwidXNlcnR5cGUiOjMsImlzdXNlcnZlcmlmeSI6MH0sImF1dGhvcnVyaSI6ImtoZWxndWxseS5jb20iLCJleHAiOjE2NDU0Njg2NjUzLjA2LCJpYXQiOjE2MzYzOTY2NjV9.o8LZ_0Wzctoev0V1wNYv6ibvuLBuzqNDXzsE-QoGUtk`
-  );
+  const token = JSON.parse(localStorage.getItem("token")); // get  your token
+  options.headers.set("Authorization", `Bearer ${token}`);
 
   return fetchUtils.fetchJson(url, options);
 };
