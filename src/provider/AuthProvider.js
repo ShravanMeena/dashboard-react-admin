@@ -5,7 +5,7 @@ export const AuthProvider = {
   login: ({ username, devicetoken, devicetype, otpCode }) => {
     const request = {
       method: "POST",
-      url: "www.api.v1.somethng", //your api endpoint
+      url: "https://kgdevnode.khelgully.com/noauth-api/v1/login/user",
       data: {
         username,
         devicetoken,
@@ -15,6 +15,7 @@ export const AuthProvider = {
       headers: new Headers({ "Content-Type": "application/json" }),
     };
 
+
     return axios(request)
       .then((response) => {
         if (response?.data?.results?.token) {
@@ -23,12 +24,12 @@ export const AuthProvider = {
           const decodedToken = decodeJwt(token);
           localStorage.setItem("token", token);
           localStorage.setItem("permissions", decodedToken.permissions);
-
+         
           if (response.status < 200 || response.status >= 300) {
             throw new Error(response.statusText);
           }
         } else {
-          //   alert("Please enter your OTP");
+        //   alert("Please enter your OTP");
         }
 
         return response?.data?.results?.json();
@@ -39,6 +40,7 @@ export const AuthProvider = {
   checkError: (error) => {
     /* ... */
   },
+  
   checkAuth: () => {
     return localStorage.getItem("token") ? Promise.resolve() : Promise.reject();
   },

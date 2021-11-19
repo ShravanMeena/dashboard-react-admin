@@ -5,15 +5,39 @@ import {
   TextInput,
   NumberInput,
   DateTimeInput,
+  TopToolbar,
+  useRedirect,
 } from "react-admin";
+import Button from "@material-ui/core/Button";
 
 const ContestTitle = ({ record }) => {
   return <span>Post {record ? `"${record.name}"` : ""}</span>;
 };
 
+const PostEditActions = ({ basePath, data, resource }) => {
+  const redirect = useRedirect();
+
+  return (
+    <TopToolbar
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        flexDirection: "row",
+      }}
+    >
+      {/* Add your custom actions */}
+      <Button color="primary" onClick={() => redirect("/")}>
+        Back To Home
+      </Button>
+    </TopToolbar>
+  );
+};
+
 export const ContestEdit = (props) => {
   return (
     <Edit
+      actions={<PostEditActions />}
       title={<ContestTitle />}
       successMessage={"Successfully edit post"}
       {...props}

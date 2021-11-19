@@ -1,10 +1,8 @@
 import { fetchUtils } from "react-admin";
 import { stringify } from "query-string";
+import { ErrorToast } from "../utils/helper";
 
-// Here is an example implementation, that you can use as a base for your own Data Providers:
-// this is what we use for api calls
-
-const apiUrl = "https://some/api/v1/anothersome"; // your api endpoint
+const apiUrl = "https://kgdevnode.khelgully.com/api/v1/esport";
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -14,8 +12,12 @@ const httpClient = (url, options = {}) => {
   // add my own headers here
   options.headers.set("Access-Control-Expose-Headers", "Content-Range");
   options.headers.set("Content-Range", "esport_game_contest 0-24/319");
-  const token = JSON.parse(localStorage.getItem("token")); // get  your token
-  options.headers.set("Authorization", `Bearer ${token}`);
+  //   options.headers.set("X-User-Type", "admin");
+  //   const { token } = JSON.parse(localStorage.getItem('auth'));
+  options.headers.set(
+    "Authorization",
+    `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInVzZXJkYXRhIjp7ImlkIjoyMCwidXNlcm5hbWUiOiJFWmhlTzF0Y3NoIiwidXNlcnR5cGUiOjMsImlzdXNlcnZlcmlmeSI6MH0sImF1dGhvcnVyaSI6ImtoZWxndWxseS5jb20iLCJleHAiOjE2NDU0Njg2NjUzLjA2LCJpYXQiOjE2MzYzOTY2NjV9.o8LZ_0Wzctoev0V1wNYv6ibvuLBuzqNDXzsE-QoGUtk`
+  );
 
   return fetchUtils.fetchJson(url, options);
 };
@@ -68,17 +70,46 @@ export const CustomDataProvider = {
     return httpClient(contest_create_url, {
       method: "POST",
       body: JSON.stringify(bodyData),
-    }).then(({ json }) => {
-      return { data: { ...params.data, id: json.id } };
-    });
+    })
+      .then(({ json }) => {
+        if (!json?.success) {
+          ErrorToast({
+            msg: json?.error,
+          });
+          return;
+        }
+        return { data: { ...params.data, id: json.id } };
+      })
+      .catch((error) => {
+        if (error.status < 400 || error.status >= 500)
+          // alert(JSON.stringify(error.body.error.message.errors[0].message));
+          ErrorToast({
+            msg: JSON.stringify(error.body.error.message.errors[0].message),
+          });
+      });
   },
 
   delete: (resource, params) =>
     httpClient(`${apiUrl}/${resource}`, {
       method: "PUT",
       body: JSON.stringify({
-        id: params.id,
+        id: params?.id,
         deletedAt: new Date(),
       }),
-    }).then(({ json }) => ({ data: json })),
+    })
+      .then(({ json }) => {
+        if (!json?.success) {
+          ErrorToast({
+            msg: json?.error,
+          });
+          return;
+        }
+        return { data: json };
+      })
+      .catch((error) => {
+        if (error)
+          ErrorToast({
+            msg: error?.body?.error?.message?.errors[0]?.message,
+          });
+      }),
 };
